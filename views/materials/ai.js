@@ -1,9 +1,8 @@
-/* 
-Environment Lore:
+class NeuralNetwork {
+    constructor() {
 
-
-*/
-
+    }
+}
 
 // Randomly adjust a value by a set amount
 
@@ -25,37 +24,7 @@ function mutate(value, amount) {
     return value
 }
 
-class NeuralNetwork {
-    constructor(opts) {
-
-        for (let optName in opts) this[optName] = opts[optName]
-
-
-    }
-}
-
-// Define options for our network
-
-let opts = {
-    inputs: [2, 1],
-    weights: [],
-}
-
-// Creat the network
-
-let network = new NeuralNetwork(opts)
-
 // Weight the inputs by arbitrary values to inform the AI
-
-NeuralNetwork.prototype.createWeights = function() {
-
-    for (let input of this.inputs) {
-
-        let value = Math.floor(Math.random() * 100)
-
-        this.weights.push(input * value)
-    }
-}
 
 NeuralNetwork.prototype.mutateWeights = function() {
 
@@ -68,11 +37,40 @@ NeuralNetwork.prototype.mutateWeights = function() {
     this.weights = newWeights
 }
 
+NeuralNetwork.prototype.createWeights = function() {
+
+    let value = Math.floor(Math.random() * 10)
+
+    this.weights = []
+    for (let input of this.inputs) this.weights.push(value)
+}
+
+NeuralNetwork.prototype.updateWeights = function() {
+
+    this.weightResults = []
+
+    let i = 0
+
+    for (let input of this.inputs) {
+
+        let weight = this.weights[i]
+
+        this.weightResults.push(input * weight)
+
+        i++
+    }
+}
+
 NeuralNetwork.prototype.applyWeights = function() {
 
-    // If no weights exist
+    // If no weights exist create them
 
-    if (this.weights.length == 0) this.createWeights()
+    if (!this.weights) this.createWeights()
+
+
+    // Update weightResults to match inputs
+
+    this.updateWeights()
 }
 
 // Convert the weights into a single arbitrary value
@@ -81,14 +79,14 @@ NeuralNetwork.prototype.transfer = function() {
 
     this.transferValue = 0
 
-    for (let weight of this.weights) this.transferValue += weight
+    for (let weightResult of this.weightResults) this.transferValue += weightResult
 }
 
 // Make sure the value is greater than 0
 
 NeuralNetwork.prototype.activate = function() {
 
-    this.activateValue = Math.max(this.transferValue, 0)
+    this.activateValue = (Math.max(this.transferValue, 0)).toFixed(2)
 }
 
 NeuralNetwork.prototype.run = function() {
@@ -96,10 +94,8 @@ NeuralNetwork.prototype.run = function() {
     this.applyWeights()
 
     this.transfer()
-    
-    this.activate()
 
-    console.log(Math.floor(this.activateValue))
+    this.activate()
 }
 
 NeuralNetwork.prototype.learn = function() {
@@ -109,12 +105,4 @@ NeuralNetwork.prototype.learn = function() {
     this.mutateWeights()
 }
 
-setInterval((function() {
-
-    network.run()
-}), 1)
-
-setInterval((function() {
-
-    network.learn()
-}), 10)
+export { NeuralNetwork }

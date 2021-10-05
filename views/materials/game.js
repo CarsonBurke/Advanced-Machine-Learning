@@ -462,16 +462,19 @@ function ai(opts) {
 
             // Move player
 
+
+            console.log(player.memory.NeuralNetwork.activateValue)
+
             player.memory.NeuralNetwork.inputs = [player.x, player.y, goal.x, goal.y]
 
             /* player.memory.NeuralNetwork.learn() */
             player.memory.NeuralNetwork.run()
 
             let moveOptions = {
-                300: options.moveLeft,
-                200: options.moveUp,
-                100: options.moveRight,
-                0: options.moveDown,
+                0: options.moveLeft,
+                100: options.moveUp,
+                200: options.moveRight,
+                300: options.moveDown,
             }
 
             movePlayer()
@@ -482,7 +485,7 @@ function ai(opts) {
 
                     // Make sure the output is greater than
 
-                    if (player.memory.NeuralNetwork.activateValue >= parseInt(value)) {
+                    if (player.memory.NeuralNetwork.activateValue <= value) {
 
                         let option = moveOptions[value]
                         option(player, tick)
@@ -491,8 +494,6 @@ function ai(opts) {
                     }
                 }
             }
-
-            console.log(player.memory.NeuralNetwork.activateValue)
 
             // Record where the player moves
 

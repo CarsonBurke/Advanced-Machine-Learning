@@ -39,7 +39,7 @@ NeuralNetwork.prototype.mutateWeights = function() {
 
 NeuralNetwork.prototype.createWeights = function() {
 
-    let value = Math.floor(Math.random() * 10)
+    let value = Math.floor(Math.random() * 5)
 
     this.weights = []
     for (let input of this.inputs) this.weights.push(value)

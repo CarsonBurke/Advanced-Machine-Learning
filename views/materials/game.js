@@ -1,5 +1,5 @@
 import "./gameVars.js"
-import { NeuralNetwork } from "./ai.js"
+import { NeuralNetwork } from "./neuralNetwork.js"
 
 function findById(id) {
 
@@ -445,10 +445,63 @@ function ai(opts) {
 
         for (let player of players) {
 
+            //
+
+            let inputs = [player.x, player.y, goal.x, goal.y]
+
             // Initialize player's memory
 
             if (!player.memory.travelledPath) player.memory.travelledPath = []
-            if (!player.memory.NeuralNetwork) player.memory.NeuralNetwork = new NeuralNetwork()
+            if (!player.memory.NeuralNetwork) {
+
+                // Create neural network
+
+                let network = new NeuralNetwork()
+
+                // Create layers
+
+                let layerCount = 3
+
+                for (let i = 0; i < layerCount; i++) network.addLayer({})
+
+                // Create perceptrons
+
+                // Create input perceptrons
+
+                network.layers[0].addPerceptrons(inputs.length)
+
+                // Create hidden perceptrons
+
+                let hiddenPerceptronsNeed = 5
+
+                // Loop through layers
+
+                for (let layerName in network.layers) {
+
+                    // Filter only hidden layers
+
+                    let layersCount = Object.keys(network.layers).length
+
+                    if (layerName > 0 && layerName < layersCount - 1) {
+
+                        let layer = network.layers[layerName]
+
+                        layer.addPerceptrons(hiddenPerceptronsNeed)
+                    }
+                }
+
+                // Create output perceptrons
+
+                network.layers[layerCount - 1].addPerceptrons(4)
+
+                // Initialize neural network
+
+                network.config()
+
+                //
+
+                player.memory.NeuralNetwork = network
+            }
 
             // If the player reaches the goal
 
@@ -460,15 +513,28 @@ function ai(opts) {
                 return
             }
 
+            // Run the network
+
+            player.memory.NeuralNetwork.run({
+                inputs: inputs
+            })
+
+            let layerCount = Object.keys(player.memory.NeuralNetwork.layers).length
+
+            let lastLayer = player.memory.NeuralNetwork.layers[layerCount - 1]
+
+            // Loop through each perceptron in the lastLayer
+
+            for (let perceptronName in lastLayer.perceptrons) {
+
+                let perceptron = lastLayer.perceptrons[perceptronName]
+
+                console.log(perceptron.activateValue)
+            }
+
             // Move player
 
-
-            console.log(player.memory.NeuralNetwork.activateValue)
-
-            player.memory.NeuralNetwork.inputs = [player.x, player.y, goal.x, goal.y]
-
             /* player.memory.NeuralNetwork.learn() */
-            player.memory.NeuralNetwork.run()
 
             let moveOptions = {
                 0: options.moveLeft,

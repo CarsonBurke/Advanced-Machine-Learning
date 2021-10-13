@@ -300,6 +300,8 @@ ai({
 
 function ai(opts) {
 
+    //
+
     let goal = findGoal()
 
     let generation = 0
@@ -486,10 +488,6 @@ function ai(opts) {
 
                 network.layers[layerCount - 1].addPerceptrons(4)
 
-                // Initialize neural network
-
-                network.config()
-
                 //
 
                 player.memory.NeuralNetwork = network
@@ -527,7 +525,7 @@ function ai(opts) {
 
                     let perceptron = lastLayer.perceptrons[perceptronName]
 
-                    if (perceptron.activateValue >= 0.01) continue
+                    if (perceptron.activateValue >= 1) continue
 
                     //
 
@@ -538,28 +536,44 @@ function ai(opts) {
                 }
             }
 
+            //
+
+            /* player.memory.NeuralNetwork.deleteVisuals() */
+
             // Record where the player moves
 
             player.memory.travelledPath.push({ x: player.x, y: player.y })
         }
 
+        // Find the closest pos to goal
+
+        let lowestValue = Math.min.apply(Math, players.map(player => goal.x - player.x + goal.y - player.y))
+
+        // Find closest player to goal
+
+        let closestPlayer = players.filter(player => goal.x - player.x + goal.y - player.y == lowestValue)[0]
+
+        // Display player's neural network
+
+        closestPlayer.memory.NeuralNetwork.drawVisuals()
+        closestPlayer.memory.NeuralNetwork.updateVisuals()
+
         // If a lot of time has passed since last reset
 
         if (tick - lastReset >= gridSize * 3) {
-
-            // Find the closest pos to goal
-
-            let lowestValue = Math.min.apply(Math, players.map(player => goal.x - player.x + goal.y - player.y))
-
-            // Find closest player to goal
-
-            let closestPlayer = players.filter(player => goal.x - player.x + goal.y - player.y == lowestValue)[0]
 
             // Reproduce with closest player
 
             reproduce(closestPlayer, players, tick)
         }
     }
+
+    //
+
+    let el = document.getElementById("fastestPossiblePath")
+
+    let fastestPossiblePath = gridSize * 2 - 2
+    el.innerText = fastestPossiblePath
 
     function updateUI() {
 

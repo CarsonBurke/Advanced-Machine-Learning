@@ -1,5 +1,5 @@
 let defaults = {
-    learningRate: 0.1,
+    learningRate: 0.7,
     bias: 1,
 }
 
@@ -277,9 +277,6 @@ class NeuralNetwork {
                 })
             }
         }
-
-        /* this.UI() */
-        this.updateVisuals()
     }
     learn() {
 

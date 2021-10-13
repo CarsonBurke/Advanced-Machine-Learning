@@ -1,5 +1,5 @@
 let defaults = {
-    learningRate: 1,
+    learningRate: 0.1,
     bias: 1,
 }
 
@@ -288,6 +288,8 @@ class NeuralNetwork {
         let perceptrons = this.getPerceptrons()
 
         for (let perceptron of perceptrons) perceptron.learn()
+
+        return this
     }
     UI() {
 
@@ -583,6 +585,10 @@ class NeuralNetwork {
                 }
             }
         }
+    }
+    deleteVisuals() {
+
+        this.visualsParent.remove()
     }
     config() {
 

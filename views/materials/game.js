@@ -1,5 +1,7 @@
+import "./lodash.js"
 import "./gameVars.js"
 import { NeuralNetwork } from "./neuralNetwork.js"
+
 
 function findById(id) {
 
@@ -293,7 +295,7 @@ function placeGoal() {
 // AI
 
 ai({
-    tickSpeed: 100,
+    tickSpeed: 1,
 })
 
 function ai(opts) {
@@ -302,6 +304,8 @@ function ai(opts) {
 
     let generation = 0
     let pathLength = 0
+
+    let lastReset = 0
 
     let options = {
         moveUp: function(player) {
@@ -362,32 +366,6 @@ function ai(opts) {
         el.style.left = gridPartSize * player.x + "px"
     }
 
-    function findDirection(pos1, pos2) {
-
-        let value
-
-        // check top
-
-        if (pos1.x == pos2.x && pos1.y - 1 == pos2.y) value = 0
-
-        // check left
-
-        if (pos1.x - 1 == pos2.x && pos1.y == pos2.y) value = 1
-
-        // check bottom
-
-        if (pos1.x == pos2.x && pos1.y + 1 == pos2.y) value = 2
-
-        // check right
-
-        if (pos1.x + 1 == pos2.x && pos1.y == pos2.y) value = 3
-
-        let optionsArray = Object.keys(options)
-
-        let direction = optionsArray[value]
-        return direction
-    }
-
     function findGoal() {
 
         for (let id in objects) {
@@ -417,26 +395,40 @@ function ai(opts) {
         if (pos1.x == pos2.x && pos1.y == pos2.y) return true
     }
 
-    function reproduce(player, players) {
+    function reproduce(player, players, tick) {
 
         // Record stats
 
         generation++
         pathLength = player.memory.travelledPath.length
 
-        // Delete players
+        // Loop through layers
 
         for (let player of players) {
+
+            // Delete el
 
             let el = document.getElementById(player.id)
             el.remove()
 
+            // Delete player
+
             delete objects[player.id]
         }
 
+        // Record this tick as being the one it was reset on
+
+        lastReset = tick
+
         // Create new players
 
-        for (let i = 0; i < playerCount; i++) placePlayer({ memory: { NeuralNetwork: player.memory.NeuralNetwork.learn() }, color: player.color })
+        for (let i = 0; i < playerCount; i++) {
+
+            let duplicateNetwork = _.cloneDeep(player.memory.NeuralNetwork)
+            duplicateNetwork.learn()
+
+            placePlayer({ memory: { NeuralNetwork: duplicateNetwork }, color: player.color })
+        }
     }
 
     function runBatch(tick) {
@@ -447,8 +439,7 @@ function ai(opts) {
 
             //
 
-            /* let inputs = [player.x + goal.x, player.y + goal.y] */
-            let inputs = [goal.x - player.x, goal.y - player.y]
+            let inputs = [player.x, player.y]
 
             // Initialize player's memory
 
@@ -510,7 +501,7 @@ function ai(opts) {
 
                 // Reproduce players
 
-                reproduce(player, players)
+                reproduce(player, players, tick)
                 return
             }
 
@@ -530,18 +521,34 @@ function ai(opts) {
 
                 let perceptron = lastLayer.perceptrons[perceptronName]
 
-                if (perceptron.activateValue > 100) continue
+                if (perceptron.activateValue >= 0.01) continue
 
                 //
 
                 let option = options[Object.keys(options)[perceptronName]]
                 option(player, tick)
-                console.log(option)
             }
 
             // Record where the player moves
 
             player.memory.travelledPath.push({ x: player.x, y: player.y })
+        }
+
+        // If a lot of time has passed since last reset
+
+        if (tick - lastReset >= gridSize * 3) {
+
+            // Find the closest pos to goal
+
+            let lowestValue = Math.min.apply(Math, players.map(player => goal.x - player.x + goal.y - player.y))
+
+            // Find closest player to goal
+
+            let closestPlayer = players.filter(player => goal.x - player.x + goal.y - player.y == lowestValue)[0]
+
+            // Reproduce with closest player
+
+            reproduce(closestPlayer, players, tick)
         }
     }
 

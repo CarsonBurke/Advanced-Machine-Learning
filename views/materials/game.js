@@ -447,7 +447,8 @@ function ai(opts) {
 
             //
 
-            let inputs = [player.x, player.y, goal.x, goal.y]
+            /* let inputs = [player.x + goal.x, player.y + goal.y] */
+            let inputs = [goal.x - player.x, goal.y - player.y]
 
             // Initialize player's memory
 
@@ -529,36 +530,13 @@ function ai(opts) {
 
                 let perceptron = lastLayer.perceptrons[perceptronName]
 
-                console.log(perceptron.activateValue)
-            }
+                if (perceptron.activateValue > 100) continue
 
-            // Move player
+                //
 
-            /* player.memory.NeuralNetwork.learn() */
-
-            let moveOptions = {
-                0: options.moveLeft,
-                100: options.moveUp,
-                200: options.moveRight,
-                300: options.moveDown,
-            }
-
-            movePlayer()
-
-            function movePlayer() {
-
-                for (let value in moveOptions) {
-
-                    // Make sure the output is greater than
-
-                    if (player.memory.NeuralNetwork.activateValue <= value) {
-
-                        let option = moveOptions[value]
-                        option(player, tick)
-
-                        return
-                    }
-                }
+                let option = options[Object.keys(options)[perceptronName]]
+                option(player, tick)
+                console.log(option)
             }
 
             // Record where the player moves

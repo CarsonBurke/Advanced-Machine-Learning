@@ -515,18 +515,27 @@ function ai(opts) {
 
             let lastLayer = player.memory.NeuralNetwork.layers[layerCount - 1]
 
-            // Loop through each perceptron in the lastLayer
+            //
 
-            for (let perceptronName in lastLayer.perceptrons) {
+            movePlayer()
 
-                let perceptron = lastLayer.perceptrons[perceptronName]
+            function movePlayer() {
 
-                if (perceptron.activateValue >= 0.01) continue
+                // Loop through each perceptron in the lastLayer
 
-                //
+                for (let perceptronName in lastLayer.perceptrons) {
 
-                let option = options[Object.keys(options)[perceptronName]]
-                option(player, tick)
+                    let perceptron = lastLayer.perceptrons[perceptronName]
+
+                    if (perceptron.activateValue >= 0.01) continue
+
+                    //
+
+                    let option = options[Object.keys(options)[perceptronName]]
+                    option(player, tick)
+
+                    return
+                }
             }
 
             // Record where the player moves

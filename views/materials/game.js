@@ -422,6 +422,12 @@ function ai(opts) {
 
         lastReset = tick
 
+        //
+
+        let distance = goal.x - player.x + goal.y - player.y
+
+        player.memory.NeuralNetwork.learningRate = distance / gridSize
+
         // Create new players
 
         for (let i = 0; i < playerCount; i++) {
@@ -555,8 +561,8 @@ function ai(opts) {
 
         // Display player's neural network
 
-        closestPlayer.memory.NeuralNetwork.drawVisuals()
-        closestPlayer.memory.NeuralNetwork.updateVisuals()
+        /*         closestPlayer.memory.NeuralNetwork.drawVisuals()
+                closestPlayer.memory.NeuralNetwork.updateVisuals() */
 
         // If a lot of time has passed since last reset
 

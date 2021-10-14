@@ -531,7 +531,7 @@ function ai(opts) {
                     let option = options[Object.keys(options)[perceptronName]]
                     option(player, tick)
 
-                    return
+                    /* return */
                 }
             }
 
@@ -572,7 +572,7 @@ function ai(opts) {
 
     let el = document.getElementById("fastestPossiblePath")
 
-    let fastestPossiblePath = gridSize * 2 - 2
+    let fastestPossiblePath = gridSize - 1
     el.innerText = fastestPossiblePath
 
     function updateUI() {

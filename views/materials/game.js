@@ -560,7 +560,7 @@ function ai(opts) {
 
         // If a lot of time has passed since last reset
 
-        if (tick - lastReset >= gridSize * 2) {
+        if (tick - lastReset >= gridSize) {
 
             // Reproduce with closest player
 

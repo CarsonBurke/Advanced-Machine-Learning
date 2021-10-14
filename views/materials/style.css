@@ -4,7 +4,7 @@ body {
     padding: 0;
     font-family: "poppins", "sans-serif";
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
     --primary: rgb(5, 228, 5);
     --primaryShade: rgb(66, 66, 66);
     --secondaryShade: rgb(38, 40, 43);

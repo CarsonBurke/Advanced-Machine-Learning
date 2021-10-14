@@ -562,6 +562,10 @@ function ai(opts) {
 
         if (tick - lastReset >= gridSize) {
 
+            // Reset travelled path
+
+            closestPlayer.memory.travelledPath = []
+
             // Reproduce with closest player
 
             reproduce(closestPlayer, players, tick)

@@ -1,5 +1,5 @@
 let defaults = {
-    learningRate: 0.7,
+    learningRate: 0.1,
     bias: 1,
 }
 

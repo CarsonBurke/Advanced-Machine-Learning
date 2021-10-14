@@ -299,7 +299,7 @@ function placeGoal() {
 // AI
 
 ai({
-    tickSpeed: 50,
+    tickSpeed: 1,
 })
 
 function ai(opts) {

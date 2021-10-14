@@ -312,11 +312,7 @@ function ai(opts) {
     let options = {
         moveUp: function(player) {
 
-            if (player.y <= 0) {
-
-                options.moveDown(player)
-                return
-            }
+            if (player.y <= 0) return
 
             player.y -= 1
 
@@ -324,11 +320,7 @@ function ai(opts) {
         },
         moveLeft: function(player) {
 
-            if (player.x <= 0) {
-
-                options.moveRight(player)
-                return
-            }
+            if (player.x <= 0) return
 
             player.x -= 1
 
@@ -336,11 +328,8 @@ function ai(opts) {
         },
         moveDown: function(player) {
 
-            if (player.y >= gridSize - 1) {
+            if (player.y >= gridSize - 1) return
 
-                options.moveUp(player)
-                return
-            }
 
             player.y += 1
 
@@ -348,11 +337,7 @@ function ai(opts) {
         },
         moveRight: function(player) {
 
-            if (player.x >= gridSize - 1) {
-
-                options.moveLeft(player)
-                return
-            }
+            if (player.x >= gridSize - 1) return
 
             player.x += 1
 
@@ -496,6 +481,10 @@ function ai(opts) {
 
                 //
 
+                network.config()
+
+                //
+
                 player.memory.NeuralNetwork = network
             }
 
@@ -531,7 +520,7 @@ function ai(opts) {
 
                     let perceptron = lastLayer.perceptrons[perceptronName]
 
-                    if (perceptron.activateValue >= 1) continue
+                    if (perceptron.activateValue > 0) continue
 
                     //
 
@@ -544,7 +533,7 @@ function ai(opts) {
 
             //
 
-            /* player.memory.NeuralNetwork.deleteVisuals() */
+            player.memory.NeuralNetwork.visualsParent.classList.remove("visualsParentShow")
 
             // Record where the player moves
 
@@ -561,8 +550,9 @@ function ai(opts) {
 
         // Display player's neural network
 
-        /*         closestPlayer.memory.NeuralNetwork.drawVisuals()
-                closestPlayer.memory.NeuralNetwork.updateVisuals() */
+        closestPlayer.memory.NeuralNetwork.visualsParent.classList.add("visualsParentShow")
+
+        closestPlayer.memory.NeuralNetwork.updateVisuals()
 
         // If a lot of time has passed since last reset
 

@@ -245,22 +245,15 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 8px;
-    box-shadow: inset rgba(255, 255, 255, 0.1) 0 0 0 0.5px;
 }
 
 .player {
-    width: 15px;
-    height: 15px;
-    margin-top: 2.5px;
-    margin-left: 2.5px;
     border-radius: 100%;
     box-shadow: rgba(0, 0, 0, 0.4) 0 0 10px 0;
     z-index: 1000;
 }
 
 .goal {
-    width: 20px;
-    height: 20px;
     background: rgb(255, 255, 255);
     box-shadow: rgba(0, 0, 0, 0.15) 0 0 10px 0;
     transition: all 0.1s;

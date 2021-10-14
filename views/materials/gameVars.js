@@ -1,8 +1,8 @@
 // Assign variables
 
 let properties = {
-    mapDimensions: 1000,
-    gridPartSize: 20,
+    mapDimensions: 500,
+    gridPartSize: 10,
     nextId: 0,
     map: {
         el: document.getElementById("map"),

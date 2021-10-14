@@ -255,6 +255,9 @@ function placeObject(opts) {
     el.style.top = gridPartSize * opts.y + "px"
     el.style.left = gridPartSize * opts.x + "px"
 
+    el.style.width = gridPartSize + "px"
+    el.style.height = gridPartSize + "px"
+
     let color = opts.color
     if (color) el.style.backgroundColor = color
 
@@ -284,7 +287,8 @@ placeGoal()
 function placeGoal() {
 
     let type = "goal"
-    let pos = { x: 49, y: 49 }
+    let pos = { x: gridSize - 1, y: gridSize - 1 }
+
     placeObject({
         type: type,
         x: pos.x,
@@ -295,7 +299,7 @@ function placeGoal() {
 // AI
 
 ai({
-    tickSpeed: 1,
+    tickSpeed: 50,
 })
 
 function ai(opts) {
@@ -556,7 +560,7 @@ function ai(opts) {
 
         // If a lot of time has passed since last reset
 
-        if (tick - lastReset >= gridSize * 3) {
+        if (tick - lastReset >= gridSize * 2) {
 
             // Reproduce with closest player
 
